@@ -1,0 +1,73 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#message-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  height: 400px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+.message {
+  max-width: 60%;
+  margin: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.my-message {
+  background-color: #65a3d5;
+  color:#fefee5;
+  margin-left: auto;
+  text-align: left;
+  width:200px;
+  font-size: medium;
+}
+
+.other-message {
+  background-color: #949794;
+  color: #f5f3e4;
+  margin-right: auto;
+  text-align: left;
+  width:200px;
+  font-size: medium;
+}
+
+.name {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.time {
+  font-size: 11px;
+  opacity: 0.8;
+  display: block;
+  margin-top: 4px;
+  color:#f1eaea;
+}
+
+
+#send-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  padding: 10px;
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+#send-button{
+  margin-left: 10px;
+}
