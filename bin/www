@@ -24,8 +24,13 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 io.on('connection', (socket) => {
-  // When a user sends a message
-  socket.on('send-chat-message', (data) => {
+  
+   socket.on("join-room", (room) => {  
+    socket.join(room);
+    console.log(`${socket.id} joined room ${room}`);  //print id on console
+   });
+
+  socket.on('send-chat-message', (data) => { // When a user sends a message
     // 'data' will now be an object { name: "User", message: "Hi" }
     const messageObject = {
       name: data.name,
@@ -34,7 +39,7 @@ io.on('connection', (socket) => {
     };
 
     // Broadcast the full object to everyone
-    io.emit('chat-message', messageObject);
+    io.to(data.room).emit("chat-message", messageObject);
   });
 });
 /**

@@ -5,6 +5,9 @@ const socket = io();
 
 socket.on("connect", () => {
   // NOW the connection is guaranteed
+  let room = prompt("Enter room name") || "general";
+  socket.emit("join-room", room);
+
   let userName = "Anonymous";
 
 document.getElementById("send-container").addEventListener("click", () => {
@@ -24,16 +27,18 @@ document.getElementById("send-container").addEventListener("click", () => {
     const message = messageInput.value.trim();
     if (message !== "") {
       socket.emit("send-chat-message", {
+        room,
         name: userName,
-        message: message,
+        message
       });
       messageInput.value = "";
     }
   });
 
-  socket.on("chat-message", (data) => {
+  socket.on("chat-message", data => {
     appendMessage(data);
   });
+
 
 function appendMessage(data) {
     const messageElement = document.createElement('div');
