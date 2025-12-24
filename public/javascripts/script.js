@@ -1,25 +1,30 @@
-console.log("script loaded");
-console.log(document.getElementById("send-container"));
-
 const socket = io();
 
+const messageForm = document.getElementById("send-container");
+const messageInput = document.getElementById("message-input");
+const messageContainer = document.getElementById("message-container");
+
+// room: ask ONCE
+const room =
+  sessionStorage.getItem("room") ||
+  (prompt("Enter room name") || "general");
+
+sessionStorage.setItem("room", room);
+
+let userName = "Anonymous";
+
 socket.on("connect", () => {
-  // NOW the connection is guaranteed
-  let room = prompt("Enter room name") || "general";
   socket.emit("join-room", room);
+});
 
-  let userName = "Anonymous";
-
-document.getElementById("send-container").addEventListener("click", () => {
+// ask name on first interaction (input focus is best)
+messageInput.addEventListener("focus", () => {
   if (userName === "Anonymous") {
     userName = prompt("What is your name?") || "Anonymous";
   }
 }, { once: true });
 
 
-  const messageForm = document.getElementById("send-container");
-  const messageInput = document.getElementById("message-input");
-  const messageContainer = document.getElementById("message-container");
 
   messageForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -74,6 +79,3 @@ function getColorForUser(name) {
 
   return colors[Math.abs(hash) % colors.length];
 }
-
-
-});
