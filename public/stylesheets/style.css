@@ -1,73 +1,189 @@
+/* Reset body to allow #app to take full screen */
 body {
-  padding: 50px;
+  margin: 0;
+  padding: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
 }
 
-a {
-  color: #00B7FF;
+#app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: Arial, sans-serif;
 }
 
-#message-container {
+/* --- LEFT PANEL (Sidebar) --- */
+#left-panel {
+  width: 300px;
+  background: #f7f7f8;
+  border-right: 1px solid #ddd;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-  height: 400px;
+  box-sizing: border-box;
+  background: #e3e4e5;
+}
+
+#left-panel h3 {
+  margin: 0 0 15px 0;
+}
+
+#room-input {
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+
+#create-room-btn {
+  padding: 10px;
+  border: none;
+  background: #3496a8;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+#create-room-btn:hover{
+  background-color: #3ab5cb;
+}
+
+#room-list {
+  flex: 1;
   overflow-y: auto;
-  background-color: #f9f9f9;
+}
+
+.room-item {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.room-item:hover {
+  background: #efefef;
+}
+
+.room-item.active {
+  background: #dfefff;
+  font-weight: bold;
+}
+
+/* --- RIGHT PANEL (Chat Area) --- */
+#chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff; /* Reverted to white background */
+  position: relative;
+}
+
+#no-chat-selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+#active-chat-area {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* --- MESSAGES --- */
+#message-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column; 
+  padding: 20px;
+  overflow-y: auto;
+  gap: 10px;
+  background-color: #f9f9f9; /* Reverted to light gray chat area */
+  padding-bottom: 80px; 
 }
 
 .message {
-  max-width: 60%;
-  margin: 8px;
-  padding: 8px;
+  width:200px;
+  max-width: 70%;
+  padding: 10px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  word-wrap: break-word;
+  display: flex;
+  flex-direction: column;
 }
 
+/* YOUR MESSAGES (Blue/Yellow) */
 .my-message {
-  background-color: #65a3d5;
-  color:#fefee5;
-  margin-left: auto;
-  text-align: left;
-  width:200px;
-  font-size: medium;
+  background-color: #4ba2b0; /* Your blue */
+  color: #fefee5;           /* Your light yellow text */
+  align-self: flex-end;     /* Aligns bubble to the RIGHT */
 }
 
+/* OTHER MESSAGES (Gray/White) */
 .other-message {
-  background-color: #949794;
-  color: #f5f3e4;
-  margin-right: auto;
-  text-align: left;
-  width:200px;
-  font-size: medium;
+  background-color: #d5e9f3; /* Your gray */
+  color: #21273a;           /* Your off-white text */
+  align-self: flex-start;   /* Aligns bubble to the LEFT */
+}
+
+.other-message .time {
+  color: #707dab; /* A specific darker gray for the timestamp on other messages */
+  opacity: 0.8;     /* Make it fully solid if the background is light */
 }
 
 .name {
   font-weight: bold;
-  display: block;
+  font-size: small;
   margin-bottom: 4px;
 }
 
 .time {
   font-size: 11px;
   opacity: 0.8;
-  display: block;
   margin-top: 4px;
-  color:#f1eaea;
+  color: #f1eaea;
+  text-align: right;
 }
 
-
+/* --- INPUT AREA --- */
 #send-container {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: white;
-  padding: 10px;
-  display: flex;
-  border-top: 1px solid #ccc;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: white;
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    justify-content: center;
+    max-width: 500px;
+    margin-left: 291px;
 }
 
-#send-button{
-  margin-left: 10px;
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 600px;
+}
+#send-button {
+    margin-left: 10px;
+    padding: 0 15px;
+    border-radius: 315px;
+    color: white;
+    border: 2px solid #2895ba;
+    background-color: #3496a8;
+}
+#send-button:hover {
+  background-color: #3dbacf;
+  cursor: pointer;
 }

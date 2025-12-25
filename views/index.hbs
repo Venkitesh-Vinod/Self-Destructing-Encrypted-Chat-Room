@@ -1,5 +1,24 @@
-<div id="message-container"></div>
-<form id="send-container">
-<input type="text" id="message-input">
-<button type="submit" id="send-button">Send</button>
-</form>
+<div id="app">
+  <div id="left-panel">
+    <h3 style="color:#1c8ca0">Rooms</h3>
+    <input id="room-input" placeholder="Room name..." />
+    <button id="create-room-btn">Create or Join room</button>
+
+    <div id="room-list">
+      </div>
+  </div>
+
+  <div id="chat-panel">
+    <div id="no-chat-selected">
+      <p>Select a room to start messaging</p>
+    </div>
+    <div id="active-chat-area" style="display: none;">
+      <div id="message-container"></div>
+
+      <form id="send-container">
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button type="submit" id="send-button">Send</button>
+      </form>
+    </div>
+  </div>
+</div>
