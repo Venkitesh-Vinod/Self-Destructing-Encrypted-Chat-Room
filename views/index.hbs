@@ -1,8 +1,11 @@
 <div id="app">
   <div id="left-panel">
-    <h3 style="color:#1c8ca0">Rooms</h3>
-    <input id="room-input" placeholder="Room name..." />
-    <button id="create-room-btn">Create or Join room</button>
+    <h3>Rooms</h3>
+    <div style="display:flex;">
+    <input type="text" id="room-input" placeholder="Room name..." />
+    <input type="number" id="ttl-input" placeholder="TTL in s" min="1" />
+    </div>
+    <button id="create-room-btn">Create room</button>
 
     <div id="room-list">
       </div>
@@ -10,9 +13,12 @@
 
   <div id="chat-panel">
     <div id="no-chat-selected">
-      <p>Select a room to start messaging</p>
+      <p style="font-size:large;">Select a room to start messaging</p>
     </div>
-    <div id="active-chat-area" style="display: none;">
+    <div id="active-chat-area" style="display:none;">
+
+      <div class="header-wrapper"><button id="leave-room-btn">Leave Room</button></div>
+
       <div id="message-container"></div>
 
       <form id="send-container">

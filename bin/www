@@ -23,13 +23,45 @@ var server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-io.on('connection', (socket) => {
-  
-   socket.on("join-room", (room) => {  
-    socket.join(room);
-    console.log(`${socket.id} joined room ${room}`);  //print id on console
-   });
+const rooms = {}; // Stores { roomName: { ttl: seconds } }
 
+// Server-side Ticker
+setInterval(() => {
+  for (const roomName in rooms) {
+    if (rooms[roomName].ttl > 0) {
+      rooms[roomName].ttl -= 1; // Decrease the master timer
+    }
+  }
+}, 1000);
+
+io.on("connection", (socket) => {
+  // Send the list of existing rooms to the new user immediately
+  socket.emit("initial-room-list", rooms);
+
+  socket.on("create-room", ({ roomName, ttl }) => {
+    if (!rooms[roomName]) {
+      rooms[roomName] = { ttl: ttl };
+      
+      // Tell everyone a new room exists with its countdown
+      io.emit("new-room-created", { roomName, ttl });
+
+      // Server-side master timer to delete the room
+      if (ttl > 0) {
+        setTimeout(() => {
+          delete rooms[roomName];
+          io.emit("room-destroyed-globally", roomName);
+        }, ttl * 1000);
+      } }
+  });
+
+  socket.on("join-room", (roomName) => {
+    socket.join(roomName);
+  });
+
+  socket.on("leave-room", (roomName) => {
+    socket.leave(roomName);
+  });
+  
 socket.on('send-chat-message', (data) => {
   const messageObject = {
     room: data.room, // Keep track of which room this belongs to

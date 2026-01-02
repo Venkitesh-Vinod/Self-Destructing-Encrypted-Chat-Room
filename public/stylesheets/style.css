@@ -27,25 +27,36 @@ body {
 }
 
 #left-panel h3 {
-  margin: 0 0 15px 0;
+  margin: 0 0 20px 0;
+  font-size:24px;
+  color:#0d96df;
 }
 
 #room-input {
+  width:130px;
   padding: 10px;
   margin-bottom: 8px;
   border: 1px solid #ddd;
   border-radius: 6px;
   outline: none;
 }
+#ttl-input{
+  padding:10px;
+  max-width:65px;
+  margin-left:10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
 
 #create-room-btn {
   padding: 10px;
   border: none;
-  background: #3496a8;
+  background: #0d96df;
   color: white;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 55px;
 }
 
 #create-room-btn:hover{
@@ -62,6 +73,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 5px;
+  font-size: 20px;
 }
 
 .room-item:hover {
@@ -69,8 +81,18 @@ body {
 }
 
 .room-item.active {
-  background: #dfefff;
+  background: #b8bdc2;
   font-weight: bold;
+}
+
+.rem-time{
+background-color: #c50404;
+display: block;
+width: fit-content;
+border: 1px solid #852020;
+border-radius: 10px;
+color:#ffff00;
+margin-top: 6px;
 }
 
 /* --- RIGHT PANEL (Chat Area) --- */
@@ -91,6 +113,7 @@ body {
 }
 
 #active-chat-area {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -121,7 +144,7 @@ body {
 
 /* YOUR MESSAGES (Blue/Yellow) */
 .my-message {
-  background-color: #4ba2b0; /* Your blue */
+  background-color: #0d96df; /* Your blue */
   color: #fefee5;           /* Your light yellow text */
   align-self: flex-end;     /* Aligns bubble to the RIGHT */
 }
@@ -134,7 +157,7 @@ body {
 }
 
 .other-message .time {
-  color: #707dab; /* A specific darker gray for the timestamp on other messages */
+  color: #d5e9f3; /* A specific darker gray for the timestamp on other messages */
   opacity: 0.8;     /* Make it fully solid if the background is light */
 }
 
@@ -165,7 +188,7 @@ body {
     border-radius: 15px;
     justify-content: center;
     max-width: 500px;
-    margin-left: 291px;
+    margin-left: 390px;
 }
 
 #message-input {
@@ -181,9 +204,41 @@ body {
     border-radius: 315px;
     color: white;
     border: 2px solid #2895ba;
-    background-color: #3496a8;
+    background-color:#0d96df;
 }
 #send-button:hover {
   background-color: #3dbacf;
   cursor: pointer;
+}
+
+.header-wrapper {
+    position: sticky;
+    top: 0;
+    background-color:#f9f9f9 ; /* This hides the messages as they scroll up */
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    z-index: 100;
+}
+
+#leave-room-btn {
+  position: sticky;    /* This makes it stay at the top while scrolling */
+  top: 0;             /* Where it should stick (the very top) */
+  z-index: 100;        /* Keeps it on top of the messages sliding under */
+  background-color: #d53838; 
+  align-self: flex-end;
+  margin-top: 15px;
+  color:white;
+  margin-right: 20px;
+  margin-bottom: 20px; /* This gap protects the first message */
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#leave-room-btn:hover {
+  background-color: #e76161;
 }

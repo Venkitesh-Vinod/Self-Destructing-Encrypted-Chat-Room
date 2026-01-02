@@ -9,6 +9,8 @@ const roomInput = document.getElementById("room-input");
 const createRoomBtn = document.getElementById("create-room-btn");
 const activeChatArea = document.getElementById("active-chat-area");
 const noChatSelected = document.getElementById("no-chat-selected");
+const leaveBtn = document.getElementById("leave-room-btn");
+const roomTimers = {};
 
 // App State
 let userName = "Anonymous";
@@ -16,21 +18,42 @@ let hasAskedForName = false; // Tracking variable
 let currentRoom = null;
 const chatHistory = {}; // Stores { "roomName": [messageObjects] }
 
+setInterval(() => {
+  Object.keys(roomTimers).forEach(roomName => {
+    if (roomTimers[roomName] > 0) {
+      roomTimers[roomName]--;
+      updateRoomUI(roomName);
+    }  });
+}, 1000);
+
+function formatTime(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `🕒 ${m}m ${s}s `;
+}
+
 createRoomBtn.addEventListener("click", () => {
-  const roomName = roomInput.value.trim();
-  if (!roomName) return;
-  
-  if (!hasAskedForName) { // This logic only executes until hasAskedForName is true
-    userName = prompt("What is your name?") || "Anonymous";
-    hasAskedForName = true; // Now this block will never run again
-  }
-  joinRoom(roomName);
-  roomInput.value = "";
+    const roomName = roomInput.value.trim();
+    const ttlValue = parseInt(document.getElementById("ttl-input").value);
+
+    if (!roomName ||ttlValue<=0||document.getElementById("ttl-input").value=="") return;
+    
+    // 1. Tell the server to create the room for EVERYONE
+    // This triggers the 'new-room-created' event for all clients
+    socket.emit("create-room", { roomName, ttl: ttlValue });
+
+    roomInput.value = "";
+    document.getElementById("ttl-input").value = "";
 });
 
 
 function joinRoom(roomName) {
   if (currentRoom === roomName) return;
+  
+  if (!hasAskedForName) { 
+    userName = prompt("What is your name?") || "Anonymous";
+    hasAskedForName = true;
+    }
 
   // UI Switch: Show chat, hide placeholder
   if (noChatSelected) noChatSelected.style.display = "none";
@@ -43,20 +66,42 @@ function joinRoom(roomName) {
     chatHistory[roomName] = [];
   }
 
-  socket.emit("join-room", roomName);
+  socket.emit("join-room",roomName);
   renderRooms();
   renderMessages(); // Refresh the message container for this room
 }
+
 
 function renderRooms() {
   roomList.innerHTML = "";
   Object.keys(chatHistory).forEach(room => {
     const div = document.createElement("div");
-    div.textContent = room;
     div.className = "room-item" + (room === currentRoom ? " active" : "");
-    div.onclick = () => joinRoom(room);
+    
+    // Room Name
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = room;
+    const timeSpan = document.createElement("span");
+    timeSpan.className="rem-time";
+    timeSpan.id = `timer-${room}`;
+    timeSpan.style.fontSize = "x-small";
+    timeSpan.style.display = "block"; 
+    timeSpan.textContent = formatTime(roomTimers[room]);
+
+    div.appendChild(nameSpan);
+    div.appendChild(timeSpan);
+    
+    if(room!=currentRoom){
+    div.onclick = () => joinRoom(room); }
     roomList.appendChild(div);
   });
+}
+
+function updateRoomUI(roomName) {
+  const timerElement = document.getElementById(`timer-${roomName}`);
+  if (timerElement) {
+    timerElement.textContent = formatTime(roomTimers[roomName]);
+  }
 }
 
 messageForm.addEventListener("submit", (e) => {
@@ -72,6 +117,44 @@ messageForm.addEventListener("submit", (e) => {
     });
     messageInput.value = "";
   }
+});
+
+leaveBtn.addEventListener("click", () => {
+  if (!currentRoom) return;
+  socket.emit("leave-room", currentRoom);
+  currentRoom = null; 
+  activeChatArea.style.display = "none";
+  noChatSelected.style.display = "flex";
+  renderRooms();
+});
+
+socket.on("initial-room-list", (serverRooms) => {
+  Object.keys(serverRooms).forEach(name => {
+    chatHistory[name] = [];
+    roomTimers[name] = serverRooms[name].ttl;
+  });
+  renderRooms();
+});
+
+socket.on("new-room-created", ({ roomName, ttl }) => {
+  if (!chatHistory[roomName]) {
+    chatHistory[roomName] = [];
+    roomTimers[roomName] = ttl;
+    renderRooms();
+  }
+});
+
+socket.on("room-destroyed-globally", (roomName) => {
+  delete chatHistory[roomName];
+  delete roomTimers[roomName];
+  
+  if (currentRoom === roomName) {
+    currentRoom = null;
+    activeChatArea.style.display = "none";
+    noChatSelected.style.display = "flex";
+    alert(`Room ${roomName} has SELF DESTRUCTED !`);
+  }
+  renderRooms();
 });
 
 socket.on("chat-message", data => {
@@ -119,7 +202,7 @@ function appendMessage(data) {
 }
 
 function getColorForUser(name) {
-  const colors = ['#f3cdcd', '#71287e', '#1d05aa', '#8ce5e9', '#7bff85'];
+  const colors = ['#d21884ff','#634a8a', '#c89867ff', '#2d3436', '#008080','#1a3a5f', '#2c5282', '#003366','#3d990d','#e16306', '#71287e', '#9c620aff', '#a80606ff', '#04540aff'];
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
