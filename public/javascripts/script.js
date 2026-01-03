@@ -51,7 +51,7 @@ createRoomBtn.addEventListener("click", () => {
   const roomName = roomInput.value.trim();
   const ttlValue = parseInt(document.getElementById("ttl-input").value);
 
-  if (ttlValue <= 0 || isNaN(ttlValue)) return alert("Enter a valid TTL value");
+  if (ttlValue <= 0 ||ttlValue>=3600|| isNaN(ttlValue)) return alert("Enter a valid TTL value between 0 and 3600");
   if (!roomName) return alert("Enter Room name");
 
   const password = prompt(`Set a secret password for "${roomName}":`);

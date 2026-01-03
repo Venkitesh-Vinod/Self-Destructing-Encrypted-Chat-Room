@@ -60,7 +60,6 @@ Build a chat application that:
 ├── app.js
 ├── package.json
 └── README.md
-
 ---
 
 ## How the Application Works
